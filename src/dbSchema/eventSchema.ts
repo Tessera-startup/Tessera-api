@@ -8,10 +8,9 @@ const EventSchema = new mongoose.Schema({
   location: {type: String, required: true},
   ticket_count: {type: String, required: true},
   is_open: {type:Boolean,default: true},
+  image:{type:String,required:false},
   created_at: {type: String, required: false},
 
-
- 
   
 })
 export const EventModel = mongoose.model('Events', EventSchema); //ModelName, SchemaName
@@ -28,13 +27,22 @@ const EventTicketSchema = new mongoose.Schema({
   customer_name:{type: String, required: true},
   amount:{type: String, required: true},
   date: {type: String, required: true},
-  payer_address:{type: String, required: true},
+  payer_address:{type: String, required: false},
+  address:{type: String, required: false},
+  address_sk:{type: String, required: false},
+  email:{type: String, required: true},
+  is_paid: {type:Boolean,default: false},
+  qrcode_data:{type: String, required: false},
+
 })
 
 export const EventTicketModel = mongoose.model('EventTicket', EventTicketSchema);
 export const getEventTicketByID = (id: string) => EventTicketModel.findOne({_id:id});
 export const createEventTicket= (values: Record<string, any>) => new EventTicketModel(values).save().then((ticket)=>ticket.toObject());
-export const getEventTicketByBusinessID = (id: string) => EventTicketModel.find({business_id:id});
-export const getEventTicketByEventID = (id: string) => EventTicketModel.find({event_id:id});
+export const getEventTicketByBusinessID = (id: string) => EventTicketModel.find({user_id:id, is_paid:true});
+export const getEventTicketByEventID = (id: string) => EventTicketModel.findOne({event_id:id});
+export const getAllPaidTicket = () => EventTicketModel.find({is_paid: true});
+export const updateATicket =(address: string, status:boolean, qrcode_data: string) => EventTicketModel.findOneAndUpdate({address:address}, {is_paid:status, qrcode_data:qrcode_data})
+export const getTicketByAddress =(address:string) =>EventTicketModel.findOne({address:address})
 
 

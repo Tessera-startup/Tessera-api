@@ -6,7 +6,7 @@ const UserSchema = new mongoose.Schema({
   password: {type: String, required: true, select:false},
   phonenumber: {type: String, required: true},
   public_key: {type: String, required: true},
-  private_key: {type: String, required: true},
+  private_key: {type: String, required: true, select:false},
 })
 
 export const UserModel = mongoose.model('User', UserSchema); //ModelName, SchemaName
