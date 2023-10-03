@@ -9,7 +9,7 @@ router.post('/auth/register', register);
 router.post('/auth/login', login);
 router.get('/auth/get-users',isAuthenticated,getUsers);
 router.get('', allRoutes);
-router.post('/balance', getUserBalance)
+router.post('/auth/balance', getUserBalance)
 
 }
 

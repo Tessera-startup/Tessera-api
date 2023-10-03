@@ -101,7 +101,7 @@ export const allRoutes =async(req:Request, res:Response) => {
     "FETCH-ALL-TICKET-GET":"/events/all-event-tickets",
     "CONFIRM-TICKET-POST":"/events/confirm-ticket",
     "FETCH-USER-TICKETS-GET": "/events/user-tickets",
-    "USER-SOLANA-BALANCE-POST": "/events/user-tickets"
+    "USER-SOLANA-BALANCE-POST": "/auth/balance"
 
   }
   return  res.status(200).json(myRoutes)
