@@ -4,7 +4,7 @@ import { hashPassword, random } from '../helpers';
 import bcrypt from 'bcrypt';
 import { createToken } from '../middlewares/jwts';
 import { createSolanaWallet } from '../helpers/solana.helpers';
-import { connection } from 'mongoose';
+const { Connection, PublicKey} = require('@solana/web3.js');
 
 export const register = async(req:Request, res:Response)=>{
 try {
@@ -39,10 +39,11 @@ return res.status(400).send("Registration wasn't successful")
 
 
 export const login = async (req: Request, res:Response) =>{
+ 
   try {
     const {email, password} = req.body;
     if(!email || !password) return res.status(400).send("Email and password are required")
-    const userInstance = await getUserByEmail(email).select('password + email + phonenumber + businessname')
+    const userInstance = await getUserByEmail(email).select('password + email + phonenumber + businessname + public_key')
 
     if(!userInstance){
       return res.status(400).json({error: "User is not found"})
@@ -78,3 +79,30 @@ export const getUsers = async (req: Request, res:Response) =>{
   }
 
 } 
+
+export const getUserBalance = async(req:Request, res:Response) =>{
+   const connection = new Connection("https://api.devnet.solana.com");;
+   const {address} = req.body;
+   const pubKey = new PublicKey(address)
+   const balance = await connection.getBalance(pubKey);
+   return res.status(200).json({balance: balance/1000000000 })
+
+}
+
+export const allRoutes =async(req:Request, res:Response) => {
+  const myRoutes = {
+    "REGISTER-POST": "/auth/register",
+    "LOGIN-POST":"/auth/login",
+    "GETUSERS-GET": "/auth/get-users",
+    "CREATE-EVENT-POST":"/events/create-event",
+    "FETCH-EVENTS-GET":"/events/all-events",
+    "FETCHUSER-EVENTS-GET":"/events/user-events",
+    "PURCHASE-TICKETS-POST":"/events/create-event-ticket",
+    "FETCH-ALL-TICKET-GET":"/events/all-event-tickets",
+    "CONFIRM-TICKET-POST":"/events/confirm-ticket",
+    "FETCH-USER-TICKETS-GET": "/events/user-tickets",
+    "USER-SOLANA-BALANCE-POST": "/events/user-tickets"
+
+  }
+  return  res.status(200).json(myRoutes)
+}

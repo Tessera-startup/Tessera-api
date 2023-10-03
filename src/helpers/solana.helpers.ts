@@ -79,7 +79,7 @@ await connection.confirmTransaction(airdropSignature);
 
 
 export const sendTransactions = async(from_sk: any, to:any, amount:number, connection:any, feePayer:string) => {
-console.log(from_sk, "FROMMMMMMMMMMMMMM SK");
+
 
 const secret: any= from_sk // Replace with your secret key
 
@@ -90,7 +90,7 @@ const secretKeyPair =  Keypair.fromSecretKey(
 );
 (async () => {
   const balance = await connection.getBalance(secretKeyPair.publicKey);
-  console.log("BALANCE", balance);
+
   console.log(amount * 1000000000 * 0.92,);
     const transaction = new Transaction().add(
         SystemProgram.transfer({
