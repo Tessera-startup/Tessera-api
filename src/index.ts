@@ -20,7 +20,8 @@ app.use(cors({
   credentials: true,
 }));
 
-
+app.use('/qrcodes', express.static('qrcodes'));
+app.use('/events', express.static('events'));
 app.use(compression());
 app.use(cookieParser());
 app.use(bodyParser.json());
@@ -32,7 +33,7 @@ const io = new Server(server);
 
 
 server.listen(8080, ()=>{
-  // requestTestToken("8TKEZtWbiSccXkpXEbiRWWZewNTFeCbg1W6PvxAwtog8")
+  // requestTestToken("7H99eDCrfhJergBgHCusuQSV2UfYc5rvfdKAUKHnBSA4")
  
 
   console.log("server running");

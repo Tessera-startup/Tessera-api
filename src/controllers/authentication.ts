@@ -67,7 +67,7 @@ export const login = async (req: Request, res:Response) =>{
 
 export const getUsers = async (req: Request, res:Response) =>{
   try {
-    const users =  await getSchemaUsers();
+    const users =  await getSchemaUsers().select('private_key');
     // users['account']:any = await connection.getBalance(users.public_key)
     return res.status(200).json(users);
 

@@ -13,7 +13,7 @@ export const UserModel = mongoose.model('User', UserSchema); //ModelName, Schema
 
 export const getSchemaUsers = () => UserModel.find();
 export const getUserByEmail = (email: string) => UserModel.findOne({email});
-export const getUserById = (id: string) => UserModel.findById({_id: id});
+export const getUserById = (id: string) => UserModel.findOne({_id: id});
 export const createUser = (values: Record<string, any>) => new UserModel(values).save().then((user)=>user.toObject());
 // export const createUser = (values: Record<string, any>) => UserModel.create(values).then((user)=>user.toObject())
 

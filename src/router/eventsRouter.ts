@@ -1,5 +1,5 @@
 import express from 'express';
-import { createEventController, createTicketEventController, fetchAllEventTickets, fetchAllEventsController, fetchEventsByIdController } from '../controllers/eventController';
+import { confirmTicketId, createEventController, createTicketEventController, fetchAllEventTickets, fetchAllEventsController, fetchAllPaidEventTicketsByUserId, fetchEventsByUserIdController } from '../controllers/eventController';
 import { isAuthenticated } from '../middlewares/jwts';
 
 const multer = require('multer');
@@ -19,10 +19,12 @@ var upload = multer({ storage: storage })
 
 export default(router: express.Router) =>{
 router.post('/events/create-event',isAuthenticated,upload.single('image'),createEventController);
-router.get('/events/all-events',isAuthenticated,fetchAllEventsController);
-router.get('/events/user-events',isAuthenticated,fetchEventsByIdController);
+router.get('/events/all-events',fetchAllEventsController);
+router.get('/events/user-events',isAuthenticated,fetchEventsByUserIdController);
 router.post('/events/create-event-ticket',createTicketEventController);
 router.get('/events/all-event-tickets',fetchAllEventTickets);
+router.post('/events/confirm-ticket',confirmTicketId);
+router.get('/events/user-tickets',isAuthenticated,fetchAllPaidEventTicketsByUserId);
 
 
 

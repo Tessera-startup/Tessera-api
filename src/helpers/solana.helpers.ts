@@ -1,10 +1,12 @@
 
 import { UserModel, getUserById } from "../dbSchema/users";
-import { EventTicketModel } from "../dbSchema/eventSchema";
+import { EventTicketModel, getEventByID } from "../dbSchema/eventSchema";
+import dotenv from 'dotenv'
 
 const { Connection, PublicKey, Keypair, LAMPORTS_PER_SOL, Transaction, sendAndConfirmTransaction, SystemProgram, getConfirmedSignaturesForAddress} = require('@solana/web3.js');
 const qrcode = require('qrcode')
 const bs58 = require('bs58')
+dotenv.config()
 
 export const createSolanaWallet = async () => {
 const connection = new Connection('https://api.devnet.solana.com');
@@ -47,7 +49,6 @@ export const paymentListener = async(address:string) =>{
         const business = await UserModel.findOne({_id: ticketInstance?.user_id})
         await sendTransactions(ticketInstance?.address_sk, business?.public_key, amount_in_sol, connection, feePayer)
 
-       
 
       }
           
@@ -111,15 +112,34 @@ const secretKeyPair =  Keypair.fromSecretKey(
           amount: amount
         }}) 
      const myTicket = await EventTicketModel.findOne({address: secretKeyPair.publicKey})
-      const qrcode_data = qrcode.toDataURL(JSON.stringify(myTicket), async function(err:any,code:any){
-        if (err) console.log(err, "QRCODE ERROR");
-        else{
-          console.log(code, "QRCODE DATA");
-          await EventTicketModel.updateOne({address: secretKeyPair.publicKey}, {$set:{
-            qrcode_data: code
-        }}) 
-        }
-      })
+     const event:any = await getEventByID(myTicket?.event_id ?? "")
+     const dataToEncode = {
+      "id": myTicket?.id,
+      "payer_address": myTicket?.payer_address,
+      "date":event.date_of_event,
+      "location":event?.location,
+      "is_paid":myTicket?.is_paid,
+      "customer_name":myTicket?.customer_name,
+      "event_name":myTicket?.event_name
+
+     }
+
+     qrcode.toFile(`./qrcodes/${myTicket?.id}.png`, JSON.stringify(dataToEncode), async(err:any) => {
+       if (err) {
+         console.error('Error generating QR code:', err);
+        } else {
+        const path:string = `${process.env.DOMAIN}/qrcodes/${myTicket?.id}.png`
+        await EventTicketModel.updateOne({address: secretKeyPair.publicKey}, {$set:{
+                      qrcode_data: path
+         }}) 
+      
+      }
+    });
+
+
+
+
+
 })();
 
 

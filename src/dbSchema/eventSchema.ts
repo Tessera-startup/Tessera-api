@@ -21,10 +21,12 @@ export const createEvents = (values: Record<string, any>) => new EventModel(valu
 
 
 
+
 const EventTicketSchema = new mongoose.Schema({
   user_id:{type: String, required: true},
   event_id:{type: String, required: true},
   customer_name:{type: String, required: true},
+  event_name:{type: String, required: false},
   amount:{type: String, required: true},
   date: {type: String, required: true},
   payer_address:{type: String, required: false},

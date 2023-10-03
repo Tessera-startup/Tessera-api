@@ -1,6 +1,8 @@
 import express, {Request, Response} from 'express'
-import { createEventTicket, createEvents, getAllEvents, getAllPaidTicket, getEventByID, getEventTicketByBusinessID, getEventTicketByEventID } from '../dbSchema/eventSchema'
+import { EventTicketModel, createEventTicket, createEvents, getAllEvents, getAllPaidTicket, getEventByID, getEventTicketByBusinessID, getEventTicketByEventID, getUserEvents } from '../dbSchema/eventSchema'
 import { createSolanaWallet, paymentListener } from '../helpers/solana.helpers';
+import { getUserById } from '../dbSchema/users';
+
 
 
 // This allows the business or the user to createEvent
@@ -9,9 +11,12 @@ export const createEventController = async(req: Request, res: Response) => {
   try {
     const {name, date_of_event, location, ticket_count, amount} = req.body
     const created_at = new Date();
-    console.log(req.body);
-    const user_id = req.headers['currentUser']
-    const imagePath = (req as Request)?.file?.path || ""
+    const user_id:any = req.headers['currentUser']
+    const user = await getUserById(user_id)
+
+    if (user){
+        const imagePath = (req as Request)?.file?.path || ""
+      
     const event = await createEvents({
       name,
       date_of_event,
@@ -23,6 +28,13 @@ export const createEventController = async(req: Request, res: Response) => {
       image:imagePath
     });
     return res.status(201).json(event)
+
+    }
+    else {
+      return res.status(400).json({error: "User does not exist"})
+    }
+
+  
   } catch (error) {
     return res.status(400).json({error: error})
     
@@ -59,6 +71,7 @@ export const createTicketEventController = async(req:Request, res:Response) => {
           date: date,
           address:wallet.public_key,
           email,
+          event_name: event.name,
           address_sk: wallet.private_key
     });
     ticket.address_sk = "*****"
@@ -71,17 +84,24 @@ export const createTicketEventController = async(req:Request, res:Response) => {
   }
 }
 //Get-ALL-Event Belonging to a business/user
-export const fetchEventsByIdController = async(req:Request, res:Response) => {
+export const fetchEventsByUserIdController = async(req:Request, res:Response) => {
   const user_id = req.headers['currentUser']
   if(user_id){
-  const events = await getEventByID(user_id.toString())
+  const events = await getUserEvents(user_id.toString())
   return res.sendStatus(200).json(events)
   }
   return res.sendStatus(403).json({error:"Access deneied"})
  
 }
 
-export const fetchAllEventTicketsByBusinessId = async () => {
+export const fetchAllPaidEventTicketsByUserId = async (req:Request, res:Response) => {
+  const user_id:any = req.headers['currentUser']
+  try {
+    const paid_tickets = await getEventTicketByBusinessID(user_id)
+     return res.status(200).json(paid_tickets)
+  } catch (error) {
+    return res.status(400).json({error: error})
+  }
 
 }
 
@@ -95,4 +115,16 @@ export const fetchAllEventTickets = async(req:Request, res:Response) => {
     return res.status(400).json({error: error})
     
   }
+}
+
+export const confirmTicketId = async (req:Request, res: Response) => {
+  const {id} = req.body
+  const ticket = await EventTicketModel.findOne({_id:id})
+  if (ticket){
+    return res.status(200).json({status: "Found"})
+
+  } else {
+    return res.status(400).json({status:"Not Found"})
+  }
+  
 }
