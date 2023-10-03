@@ -4,6 +4,7 @@ import { hashPassword, random } from '../helpers';
 import bcrypt from 'bcrypt';
 import { createToken } from '../middlewares/jwts';
 import { createSolanaWallet } from '../helpers/solana.helpers';
+import { connection } from 'mongoose';
 
 export const register = async(req:Request, res:Response)=>{
 try {
@@ -50,8 +51,7 @@ export const login = async (req: Request, res:Response) =>{
     if (hashedPassword != userInstance.password){
       return res.status(403).json({error: "You have entered a wrong password"})
     }
-    console.log(userInstance.email);
-    
+  
     const token = createToken(userInstance.email, userInstance.id);
     userInstance.password = "****"
     return res.status(200).json({user:userInstance ,accesstoken: token})
@@ -67,7 +67,8 @@ export const login = async (req: Request, res:Response) =>{
 
 export const getUsers = async (req: Request, res:Response) =>{
   try {
-    const users =  await getSchemaUsers();
+    const users =  await getSchemaUsers().select('private_key');
+    // users['account']:any = await connection.getBalance(users.public_key)
     return res.status(200).json(users);
 
   } catch (error) {

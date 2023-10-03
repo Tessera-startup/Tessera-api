@@ -18,12 +18,11 @@ export const isAuthenticated = (req: Request, res:Response, next: NextFunction) 
   const reqHeader = req.headers['authorization']
   
   if(!reqHeader){
-    return res.status(403).json({error:"Cant cant authorization in header"})
+    return res.status(403).json({error:"Cant find authorization in header"})
   }
   const token = reqHeader.split(" ")[1];
   verify(token,jwt_key, (err, decodedToken)=>{
    
-    console.log(decodedToken,err, "REQUEST");
     if(err){
       return res.status(403).json({error:`Invalid Token::: ${err}`})
     } else {  
