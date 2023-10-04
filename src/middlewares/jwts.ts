@@ -6,8 +6,6 @@ dotenv.config()
 
 const jwt_key: string = process.env.JWT_SECRET || "";
 
-
-
 export const createToken =(email: String, id: String) =>{
   const accessToken = sign({"email": email,"id": id}, jwt_key, {expiresIn: "1d"} )
   return accessToken
