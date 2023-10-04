@@ -21,8 +21,8 @@ app.use(cors({
   origin:'*'
 }));
 
-app.use('/qrcodes', express.static('qrcodes'));
-app.use('/events', express.static('events'));
+app.use('/src/images/qrcodes', express.static('src/images/qrcodes'));
+app.use('/src/images/events', express.static('src/images/events'));
 app.use(compression());
 app.use(cookieParser());
 app.use(bodyParser.json());

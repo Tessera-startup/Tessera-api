@@ -11,9 +11,6 @@ dotenv.config()
 export const createSolanaWallet = async () => {
 const connection = new Connection('https://api.devnet.solana.com');
 const walletKeypair = Keypair.generate();
-console.log('Wallet created successfully!');
-console.log(`Wallet Address: ${walletKeypair.publicKey.toBase58()}`);
-console.log(`Wallet Secret Key: ${walletKeypair.secretKey.toString()}`)
 const secretKey = Buffer.from(walletKeypair.secretKey)
 const data = {
   public_key: walletKeypair.publicKey.toBase58(),
@@ -124,11 +121,11 @@ const secretKeyPair =  Keypair.fromSecretKey(
 
      }
 
-     qrcode.toFile(`./qrcodes/${myTicket?.id}.png`, JSON.stringify(dataToEncode), async(err:any) => {
+     qrcode.toFile(`./src/images/qrcodes/${myTicket?.id}.png`, JSON.stringify(dataToEncode), async(err:any) => {
        if (err) {
          console.error('Error generating QR code:', err);
         } else {
-        const path:string = `${process.env.DOMAIN}/qrcodes/${myTicket?.id}.png`
+        const path:string = `${process.env.DOMAIN}/src/images/qrcodes/${myTicket?.id}.png`
         await EventTicketModel.updateOne({address: secretKeyPair.publicKey}, {$set:{
                       qrcode_data: path
          }}) 

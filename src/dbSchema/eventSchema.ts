@@ -7,6 +7,7 @@ const EventSchema = new mongoose.Schema({
   date_of_event: {type: String, required: true},
   location: {type: String, required: true},
   ticket_count: {type: String, required: true},
+  description: {type: String, required: true},
   is_open: {type:Boolean,default: true},
   image:{type:String,required:false},
   created_at: {type: String, required: false},

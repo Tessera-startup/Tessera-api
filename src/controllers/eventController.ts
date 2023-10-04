@@ -9,7 +9,7 @@ import { getUserById } from '../dbSchema/users';
 export const createEventController = async(req: Request, res: Response) => {
   
   try {
-    const {name, date_of_event, location, ticket_count, amount} = req.body
+    const {name, date_of_event, location, ticket_count, amount, description} = req.body
     const created_at = new Date();
     const user_id:any = req.headers['currentUser']
     const user = await getUserById(user_id)
@@ -25,6 +25,7 @@ export const createEventController = async(req: Request, res: Response) => {
       ticket_count, 
       user_id,
       created_at,
+      description,
       image:imagePath
     });
     return res.status(201).json(event)
