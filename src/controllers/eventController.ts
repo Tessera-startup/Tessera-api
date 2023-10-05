@@ -2,6 +2,8 @@ import express, {Request, Response} from 'express'
 import { EventTicketModel, createEventTicket, createEvents, getAllEvents, getAllPaidTicket, getEventByID, getEventTicketByBusinessID, getEventTicketByEventID, getUserEvents } from '../dbSchema/eventSchema'
 import { createSolanaWallet, paymentListener } from '../helpers/solana.helpers';
 import { getUserById } from '../dbSchema/users';
+import dotenv from 'dotenv'
+dotenv.config()
 
 
 
@@ -16,6 +18,8 @@ export const createEventController = async(req: Request, res: Response) => {
 
     if (user){
         const imagePath = (req as Request)?.file?.path || ""
+        const formattedImagePath = `${process.env.DOMAIN}/${imagePath}`
+
       
     const event = await createEvents({
       name,
@@ -26,7 +30,7 @@ export const createEventController = async(req: Request, res: Response) => {
       user_id,
       created_at,
       description,
-      image:imagePath
+      image:formattedImagePath
     });
     return res.status(201).json(event)
 

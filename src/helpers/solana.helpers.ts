@@ -121,11 +121,11 @@ const secretKeyPair =  Keypair.fromSecretKey(
 
      }
 
-     qrcode.toFile(`./src/images/qrcodes/${myTicket?.id}.png`, JSON.stringify(dataToEncode), async(err:any) => {
+     qrcode.toFile(`./images/qrcodes/${myTicket?.id}.png`, JSON.stringify(dataToEncode), async(err:any) => {
        if (err) {
          console.error('Error generating QR code:', err);
         } else {
-        const path:string = `${process.env.DOMAIN}/src/images/qrcodes/${myTicket?.id}.png`
+        const path:string = `${process.env.DOMAIN}/images/qrcodes/${myTicket?.id}.png`
         await EventTicketModel.updateOne({address: secretKeyPair.publicKey}, {$set:{
                       qrcode_data: path
          }}) 
