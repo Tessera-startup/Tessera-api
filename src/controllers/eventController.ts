@@ -93,9 +93,9 @@ export const fetchEventsByUserIdController = async(req:Request, res:Response) =>
   const user_id = req.headers['currentUser']
   if(user_id){
   const events = await getUserEvents(user_id.toString())
-  return res.sendStatus(200).json(events)
+  return res.status(200).json(events)
   }
-  return res.sendStatus(403).json({error:"Access deneied"})
+  return res.status(403).json({error:"Access deneied"})
  
 }
 
