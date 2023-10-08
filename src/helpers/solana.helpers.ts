@@ -2,6 +2,7 @@
 import { UserModel, getUserById } from "../dbSchema/users";
 import { EventTicketModel, getEventByID } from "../dbSchema/eventSchema";
 import dotenv from 'dotenv'
+import { cloudinaryUpload } from "./cloudinary";
 
 const { Connection, PublicKey, Keypair, LAMPORTS_PER_SOL, Transaction, sendAndConfirmTransaction, SystemProgram, getConfirmedSignaturesForAddress} = require('@solana/web3.js');
 const qrcode = require('qrcode')
@@ -126,8 +127,9 @@ const secretKeyPair =  Keypair.fromSecretKey(
          console.error('Error generating QR code:', err);
         } else {
         const path:string = `${process.env.DOMAIN}/images/qrcodes/${myTicket?.id}.png`
+        const cloudUpload = await cloudinaryUpload(`./images/qrcodes/${myTicket?.id}.png`)
         await EventTicketModel.updateOne({address: secretKeyPair.publicKey}, {$set:{
-                      qrcode_data: path
+                      qrcode_data: cloudUpload.secure_url
          }}) 
       
       }

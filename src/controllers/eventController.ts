@@ -3,6 +3,7 @@ import { EventTicketModel, createEventTicket, createEvents, getAllEvents, getAll
 import { createSolanaWallet, paymentListener } from '../helpers/solana.helpers';
 import { getUserById } from '../dbSchema/users';
 import dotenv from 'dotenv'
+import { cloudinaryUpload } from '../helpers/cloudinary';
 dotenv.config()
 
 
@@ -19,6 +20,8 @@ export const createEventController = async(req: Request, res: Response) => {
     if (user){
         const imagePath = (req as Request)?.file?.path || ""
         const formattedImagePath = `${process.env.DOMAIN}/${imagePath}`
+        const cloudUpload = await cloudinaryUpload(imagePath)
+     
 
       
     const event = await createEvents({
@@ -30,7 +33,7 @@ export const createEventController = async(req: Request, res: Response) => {
       user_id,
       created_at,
       description,
-      image:formattedImagePath
+      image:cloudUpload.secure_url
     });
     return res.status(201).json(event)
 
@@ -126,7 +129,7 @@ export const confirmTicketId = async (req:Request, res: Response) => {
   const {id} = req.body
   const ticket = await EventTicketModel.findOne({_id:id})
   if (ticket){
-    return res.status(200).json({status: "Found"})
+    return res.status(200).json({status: "Found"}) 
 
   } else {
     return res.status(400).json({status:"Not Found"})
