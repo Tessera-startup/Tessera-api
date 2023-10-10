@@ -35,6 +35,7 @@ const EventTicketSchema = new mongoose.Schema({
   address_sk:{type: String, required: false},
   email:{type: String, required: true},
   is_paid: {type:Boolean,default: false},
+  is_minted: {type:Boolean,default: false},
   qrcode_data:{type: String, required: false},
 
 })

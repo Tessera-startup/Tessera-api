@@ -17,7 +17,6 @@
   },
   "dependencies": {
     "@solana/web3.js": "^1.78.5",
-    "@tatumio/solana": "^2.2.38",
     "@types/bcrypt": "^5.0.0",
     "@types/body-parser": "^1.19.3",
     "@types/compression": "^1.7.3",

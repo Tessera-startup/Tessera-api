@@ -9,9 +9,6 @@ const axios = require('axios');
 dotenv.config()
 
 
-
-
-
 const { Connection, PublicKey, Keypair, LAMPORTS_PER_SOL, Transaction, sendAndConfirmTransaction, SystemProgram, getConfirmedSignaturesForAddress} = require('@solana/web3.js');
 const qrcode = require('qrcode')
 const bs58 = require('bs58')
@@ -27,9 +24,6 @@ const data = {
 }
 return  data
 }
-
-
-
 
 
 export const paymentListener = async(address:string) =>{
@@ -186,6 +180,7 @@ export const nftMinting = async (req:Request, res: Response) => {
     const dataStringify = JSON.stringify(body)
      
      const mint = await axios.post('https://api.tatum.io/v3/nft/mint',dataStringify, {headers})
+    //  const updateTicket  = await EventTicketModel.findOneAndUpdate({_id: ticket?._id},{is_minted:true})
      return res.status(200).json({data: mint.data})
 
     
@@ -198,7 +193,7 @@ export const nftMinting = async (req:Request, res: Response) => {
    }
 
   } else {
-    return res.status(400).json({error:`Ticket with this id ${id} not found`})
+    return res.status(400).json({error:`Ticket with this id ${id} not found or has been minted`})
   }
   
 }
