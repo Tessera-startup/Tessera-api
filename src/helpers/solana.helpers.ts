@@ -1,8 +1,16 @@
 
 import { UserModel, getUserById } from "../dbSchema/users";
-import { EventTicketModel, getEventByID } from "../dbSchema/eventSchema";
+import { EventTicketModel, getEventByID, getEventTicketByID } from "../dbSchema/eventSchema";
 import dotenv from 'dotenv'
 import { cloudinaryUpload } from "./cloudinary";
+import { Request, Response } from "express";
+const axios = require('axios');
+
+dotenv.config()
+
+
+
+
 
 const { Connection, PublicKey, Keypair, LAMPORTS_PER_SOL, Transaction, sendAndConfirmTransaction, SystemProgram, getConfirmedSignaturesForAddress} = require('@solana/web3.js');
 const qrcode = require('qrcode')
@@ -63,7 +71,7 @@ return walletAddress
 
 
 
- export const requestTestToken = async(address:string)=>{
+export const requestTestToken = async(address:string)=>{
   const connection = new Connection("https://api.devnet.solana.com");
   const pubKey = new PublicKey(address)
   const airdropSignature = await connection.requestAirdrop(
@@ -142,4 +150,55 @@ const secretKeyPair =  Keypair.fromSecretKey(
 })();
 
 
+}
+
+
+export const nftMinting = async (req:Request, res: Response) => {
+  const {id, to} = req.body
+  const tatumAPIKEY = process.env.TATUM_APIKEY
+  const ticket = await getEventTicketByID(id)
+  if(ticket){
+   try {
+     const user = await getUserById(ticket?.user_id ?? "").select('private_key + public_key')
+  
+     const body = {
+      chain: "SOL",
+       from: user?.public_key ?? "",
+      fromPrivateKey: user?.private_key,
+      to: `${to}`,
+      metadata: {
+       name: `${ticket?.event_name} NFT`,
+       symbol: "TESS",
+       sellerFeeBasisPoints: 0,
+       uri: `${ticket?.qrcode_data}`,
+       creators: [
+           {
+               address: `${user?.public_key}`,
+               verified: true,
+               share: 100
+           }
+       ]
+   }
+     }
+     const headers = {'x-api-key': `${tatumAPIKEY}`,
+    "Content-Type": "application/json",
+    }
+    const dataStringify = JSON.stringify(body)
+     
+     const mint = await axios.post('https://api.tatum.io/v3/nft/mint',dataStringify, {headers})
+     return res.status(200).json({data: mint.data})
+
+    
+  
+
+  
+    
+   } catch (error) {
+    return res.status(400).json({error:error}) 
+   }
+
+  } else {
+    return res.status(400).json({error:`Ticket with this id ${id} not found`})
+  }
+  
 }

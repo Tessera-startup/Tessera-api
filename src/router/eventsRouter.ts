@@ -1,6 +1,7 @@
 import express from 'express';
 import { confirmTicketId, createEventController, createTicketEventController, fetchAllEventTickets, fetchAllEventsController, fetchAllPaidEventTicketsByUserId, fetchEventsByUserIdController } from '../controllers/eventController';
 import { isAuthenticated } from '../middlewares/jwts';
+import { nftMinting } from '../helpers/solana.helpers';
 
 const multer = require('multer');
 
@@ -25,6 +26,7 @@ router.post('/events/create-event-ticket',createTicketEventController);
 router.get('/events/all-event-tickets',fetchAllEventTickets);
 router.post('/events/confirm-ticket',confirmTicketId);
 router.get('/events/user-tickets',isAuthenticated,fetchAllPaidEventTicketsByUserId);
+router.post('/events/mintnft', nftMinting);
 
 
 

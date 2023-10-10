@@ -4,6 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "devDependencies": {
+    "@tatumio/tatum-solana": "^2.0.0-alpha.113",
     "@types/express": "^4.17.17",
     "@types/mongoose": "^5.11.97",
     "@types/node": "^20.6.2",
@@ -16,6 +17,7 @@
   },
   "dependencies": {
     "@solana/web3.js": "^1.78.5",
+    "@tatumio/solana": "^2.2.38",
     "@types/bcrypt": "^5.0.0",
     "@types/body-parser": "^1.19.3",
     "@types/compression": "^1.7.3",
@@ -27,6 +29,7 @@
     "@types/jsonwebtoken": "^9.0.3",
     "@types/multer": "^1.4.7",
     "@types/socket.io": "^3.0.2",
+    "axios": "^1.5.1",
     "bcrypt": "^5.1.1",
     "body-parser": "^1.20.2",
     "bs58": "^5.0.0",
@@ -44,6 +47,7 @@
     "nodemon": "^3.0.1",
     "qrcode": "^1.5.3",
     "socket.io": "^4.7.2",
-    "ts-node": "^10.9.1"
+    "ts-node": "^10.9.1",
+    "types": "^0.1.0"
   }
 }
