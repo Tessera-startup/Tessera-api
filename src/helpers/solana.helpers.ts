@@ -151,7 +151,7 @@ export const nftMinting = async (req:Request, res: Response) => {
   const {id, to} = req.body
   const tatumAPIKEY = process.env.TATUM_APIKEY
   const ticket = await getEventTicketByID(id)
-  if(ticket){
+  if(ticket && !ticket?.is_minted){
    try {
      const user = await getUserById(ticket?.user_id ?? "").select('private_key + public_key')
   
@@ -180,7 +180,7 @@ export const nftMinting = async (req:Request, res: Response) => {
     const dataStringify = JSON.stringify(body)
      
      const mint = await axios.post('https://api.tatum.io/v3/nft/mint',dataStringify, {headers})
-    //  const updateTicket  = await EventTicketModel.findOneAndUpdate({_id: ticket?._id},{is_minted:true})
+     const updateTicket  = await EventTicketModel.findOneAndUpdate({_id: ticket?._id},{is_minted:true})
      return res.status(200).json({data: mint.data})
 
     

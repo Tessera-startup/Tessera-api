@@ -59,7 +59,7 @@ export const login = async (req: Request, res:Response) =>{
 
 
   } catch (error) {
-    console.log(error, "LOGIN");
+   return res.status(400).json({error:error})
     
   }
 
