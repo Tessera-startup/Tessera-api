@@ -48,8 +48,6 @@ export const paymentListener = async(address:string) =>{
       
         const business = await UserModel.findOne({_id: ticketInstance?.user_id})
         await sendTransactions(ticketInstance?.address_sk, business?.public_key, amount_in_sol, connection, feePayer)
-
-
       }
           
 
@@ -75,8 +73,6 @@ export const requestTestToken = async(address:string)=>{
 
 await connection.confirmTransaction(airdropSignature);
 }
-
-
 
 export const sendTransactions = async(from_sk: any, to:any, amount:number, connection:any, feePayer:string) => {
 
