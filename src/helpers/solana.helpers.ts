@@ -151,7 +151,7 @@ export const nftMinting = async (req:Request, res: Response) => {
   const {id, to} = req.body
   const tatumAPIKEY = process.env.TATUM_APIKEY
   const ticket = await getEventTicketByID(id)
-  if(ticket && !ticket?.is_minted){
+  if(ticket && ticket?.is_minted == false){
    try {
      const user = await getUserById(ticket?.user_id ?? "").select('private_key + public_key')
   
