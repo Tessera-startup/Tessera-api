@@ -144,6 +144,7 @@ const secretKeyPair =  Keypair.fromSecretKey(
 
 
 export const nftMinting = async (req:Request, res: Response) => {
+  console.log(req.body);
   const {id, to} = req.body
   const tatumAPIKEY = process.env.TATUM_APIKEY
   const ticket = await getEventTicketByID(id)
@@ -174,8 +175,9 @@ export const nftMinting = async (req:Request, res: Response) => {
     "Content-Type": "application/json",
     }
     const dataStringify = JSON.stringify(body)
-     
+     console.log('GOT HERE');
      const mint = await axios.post('https://api.tatum.io/v3/nft/mint',dataStringify, {headers})
+     console.log('COULDNT PASS');
      const updateTicket  = await EventTicketModel.findOneAndUpdate({_id: ticket?._id},{is_minted:true})
      return res.status(200).json({data: mint.data})
 
